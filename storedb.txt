@@ -1,0 +1,103 @@
+mysql> create database entreprise;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use entreprise;
+Database changed
+
+mysql> create table clients(
+    -> id_client int primary key,
+    -> nom varchar(10),
+    -> prenom varchar(10),
+    -> email varchar(25),
+    -> adresse varchar(25),
+    -> telephone varchar(13));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_entreprise |
++----------------------+
+| clients              |
++----------------------+
+1 row in set (0.04 sec)
+
+mysql> create table produits(
+    -> id_produit int primary key,
+    -> nom_produit varchar(10),
+    -> description varchar(100),
+    -> prix decimal,
+    -> stock int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table commandes(
+    -> id_commande int primary key,
+    -> id_client int,
+    -> date_commande date default (current_date()),
+    -> statut ENUM('en cours','livree','annulee'),
+    -> total decimal);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> alter table commandes
+    -> add foreign key (id_client) references clients(id_client);
+Query OK, 0 rows affected (0.11 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table commandes
+    -> add constraint check_statut check (statut in ('en cours','livree','annulee'));
+Query OK, 0 rows affected (0.13 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table commandes
+    -> alter statut set default 'en cours';
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show tables
+    -> ;
++----------------------+
+| Tables_in_entreprise |
++----------------------+
+| clients              |
+| commandes            |
+| produits             |
++----------------------+
+3 rows in set (0.01 sec)
+
+mysql> desc clients;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id_client | int         | NO   | PRI | NULL    |       |
+| nom       | varchar(10) | YES  |     | NULL    |       |
+| prenom    | varchar(10) | YES  |     | NULL    |       |
+| email     | varchar(25) | YES  |     | NULL    |       |
+| adresse   | varchar(25) | YES  |     | NULL    |       |
+| telephone | varchar(13) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> desc produits;
++-------------+---------------+------+-----+---------+-------+
+| Field       | Type          | Null | Key | Default | Extra |
++-------------+---------------+------+-----+---------+-------+
+| id_produit  | int           | NO   | PRI | NULL    |       |
+| nom_produit | varchar(10)   | YES  |     | NULL    |       |
+| description | varchar(100)  | YES  |     | NULL    |       |
+| prix        | decimal(10,0) | YES  |     | NULL    |       |
+| stock       | int           | YES  |     | NULL    |       |
++-------------+---------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> desc commandes;
++---------------+-------------------------------------+------+-----+-----------+-------------------+
+| Field         | Type                                | Null | Key | Default   | Extra             |
++---------------+-------------------------------------+------+-----+-----------+-------------------+
+| id_commande   | int                                 | NO   | PRI | NULL      |                   |
+| id_client     | int                                 | YES  | MUL | NULL      |                   |
+| date_commande | date                                | YES  |     | curdate() | DEFAULT_GENERATED |
+| statut        | enum('en cours','livree','annulee') | YES  |     | en cours  |                   |
+| total         | decimal(10,0)                       | YES  |     | NULL      |                   |
++---------------+-------------------------------------+------+-----+-----------+-------------------+
+5 rows in set (0.01 sec)
+
+mysql>
